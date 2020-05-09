@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  redis:
+    image: redis:alpine
+    networks:
+      - bond
+  brb:
+    image: xuqingfeng/brb:latest
+    environment:
+      - TGBOT_TOKEN=${TGBOT_TOKEN}
+      - REDIS_ADDR=redis:6379
+      - REDIS_PASS=""
+    ports:
+      - "8000:8000"
+    networks:
+      - bond
+    depends_on:
+      - redis
+
+networks:
+  bond:

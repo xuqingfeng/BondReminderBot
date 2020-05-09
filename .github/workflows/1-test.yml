@@ -1,0 +1,27 @@
+name: test
+
+on: [push]
+
+jobs:
+  test:
+    name: run test
+    runs-on: ubuntu-latest
+    env:
+      GO_VERSION: 1.14.2
+      GO_OS: linux
+      GO_ARCH: amd64
+    steps:
+      # install go manually to fix "go mod download" failure
+      - name: Install go
+        run: |
+          wget -q https://dl.google.com/go/go$GO_VERSION.$GO_OS-$GO_ARCH.tar.gz
+          sudo tar -C /usr/local -xzf go$GO_VERSION.$GO_OS-$GO_ARCH.tar.gz
+          export PATH=/usr/local/go/bin:$PATH
+          go version
+
+      - uses: actions/checkout@v2
+
+      - name: Run test
+        run: |
+          go mod download
+          go test -v .
