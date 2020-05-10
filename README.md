@@ -1,7 +1,30 @@
-### How to start
+## 可转债小助手
+
+> 用于可转债 打新/上市 提醒
+
+https://t.me/BondReminderBot
+
+### 用法
 
 ```
-source .env
-
-docker-compose up -d
+- 添加可转债: /add 转债名
+- 删除可转债: /rm 转债名
+- 显示已添加可转债: /list
+- 显示近期可转债: /coming
 ```
+
+*示例:*
+
+```
+/add 东财
+/list
+/rm 东财
+/coming
+```
+
+### 固定通知
+
+> (每日北京时间8:00)
+
+1. 打新提醒
+2. 已添加转债上市提醒
