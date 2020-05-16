@@ -72,11 +72,23 @@ func Process() {
 			case "start":
 				msg.Text = "- 添加可转债: `/add 转债名`\n- 删除可转债: `/rm 转债名`\n- 显示已添加可转债: `/list`\n- 显示近期可转债: `/coming`\n\n[了解更多](https://github.com/xuqingfeng/BondReminderBot)"
 			case "add":
-				addCustomConvertibleBond(chatIDInString, update.Message.CommandArguments())
-				msg.Text = "✔"
+				if update.Message.CommandArguments() != "" {
+					err = addCustomConvertibleBond(chatIDInString, update.Message.CommandArguments())
+					if err == nil {
+						msg.Text = "✔"
+					}
+				} else {
+					msg.Text = "⚠️ 缺少参数"
+				}
 			case "rm":
-				removeCustomConvertibleBond(chatIDInString, update.Message.CommandArguments())
-				msg.Text = "✔"
+				if update.Message.CommandArguments() != "" {
+					err = removeCustomConvertibleBond(chatIDInString, update.Message.CommandArguments())
+					if err == nil {
+						msg.Text = "✔"
+					}
+				} else {
+					msg.Text = "⚠️ 缺少参数"
+				}
 			case "list":
 				result, err := listCustomConvertibleBond(chatIDInString)
 				if err != nil {
@@ -126,13 +138,15 @@ func formatCustomConvertibleBond(bonds []string) string {
 	return result + "```"
 }
 
-func addCustomConvertibleBond(chatID string, bond string) {
+func addCustomConvertibleBond(chatID string, bond string) error {
 
-	redisClient.SAdd(chatID, bond)
+	_, err := redisClient.SAdd(chatID, bond).Result()
+	return err
 }
 
-func removeCustomConvertibleBond(chatID string, bond string) {
-	redisClient.SRem(chatID, bond)
+func removeCustomConvertibleBond(chatID string, bond string) error {
+	_, err := redisClient.SRem(chatID, bond).Result()
+	return err
 }
 
 func addChatID(chatID string) {
@@ -207,6 +221,7 @@ func formatFutureBonds(bonds []bond) string {
 	var isEmpty = true
 	var result = "*近期可转债信息:*\n```\n"
 	for _, bond := range bonds {
+		// TODO: sort by start - https://stackoverflow.com/a/47028486/4036946
 		result = result + bond.Title + " " + bond.Start + "\n"
 		isEmpty = false
 	}
