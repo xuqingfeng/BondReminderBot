@@ -2,6 +2,7 @@ version: "3.7"
 services:
   redis:
     image: redis:alpine
+    restart: always
     volumes:
       - redis-data:/data
     networks:
@@ -14,6 +15,7 @@ services:
       - REDIS_PASS=""
     ports:
       - "8000:8000"
+    restart: always
     networks:
       - bond
     depends_on:
