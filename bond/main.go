@@ -207,7 +207,7 @@ func getFutureBonds(fullList bool) ([]bond, error) {
 	if !fullList {
 		var filteredBonds []bond
 		for _, b := range *bondsInJSON {
-			if strings.Contains(b.Title, "上市日") || strings.Contains(b.Title, "申购日") {
+			if strings.Contains(b.Title, "上市日") || strings.Contains(b.Title, "申购日") || strings.Contains(b.Title, "开始转股") {
 				filteredBonds = append(filteredBonds, b)
 			}
 		}
