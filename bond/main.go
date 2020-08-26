@@ -221,6 +221,9 @@ func formatFutureBonds(bonds []bond) string {
 	var isEmpty = true
 	var result = "*近期可转债信息:*\n```\n"
 	for _, bond := range bonds {
+		if isToday(bond.Start) {
+			bond.Start += " [今日]"
+		}
 		// TODO: sort by start - https://stackoverflow.com/a/47028486/4036946
 		result = result + bond.Title + " " + bond.Start + "\n"
 		isEmpty = false
@@ -235,10 +238,9 @@ func formatFutureBonds(bonds []bond) string {
 func formatTodayBonds(bonds []bond) string {
 
 	var isEmpty = true
-	var today = time.Now().Format("2006-01-02")
 	var result = "*打新提醒:*\n```\n"
 	for _, bond := range bonds {
-		if strings.Contains(bond.Title, "申购日") && bond.Start == today {
+		if strings.Contains(bond.Title, "申购日") && isToday(bond.Start) {
 			result = result + bond.Title + " " + bond.Start + "\n"
 			isEmpty = false
 		}
@@ -272,6 +274,9 @@ func formatWantedBonds(bonds []bond) string {
 	var isEmpty = true
 	var result = "*上市提醒:*\n```\n"
 	for _, bond := range bonds {
+		if isToday(bond.Start) {
+			bond.Start += " [今日]"
+		}
 		result = result + bond.Title + " " + bond.Start + "\n"
 		isEmpty = false
 	}
@@ -279,6 +284,11 @@ func formatWantedBonds(bonds []bond) string {
 		return ""
 	}
 	return result + "```"
+}
+
+func isToday(date string) bool {
+	var today = time.Now().Format("2006-01-02")
+	return date == today
 }
 
 // Notify is used to send notification msg per chat id
