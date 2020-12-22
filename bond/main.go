@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"golang.org/x/net/proxy"
 )
 
 const (
@@ -33,7 +35,27 @@ type bond struct {
 // Process is the main func to interacte with telegram bot
 func Process() {
 
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("TGBOT_TOKEN"))
+	client := &http.Client{}
+	// proxy setting
+	socks5 := os.Getenv("TGBOT_SOCKS5")
+	if len(socks5) > 0 {
+		tgProxyURL, err := url.Parse(socks5)
+		if err != nil {
+			log.Printf("E! fail to parse socks5 url: %v", err)
+			os.Exit(1)
+		}
+		tgDialer, err := proxy.FromURL(tgProxyURL, proxy.Direct)
+		if err != nil {
+			log.Printf("E! fail to obtain proxy dialer: %v", err)
+			os.Exit(1)
+		}
+		tgTransport := &http.Transport{
+			Dial: tgDialer.Dial,
+		}
+		client.Transport = tgTransport
+	}
+
+	bot, err := tgbotapi.NewBotAPIWithClient(os.Getenv("TGBOT_TOKEN"), client)
 	if err != nil {
 		log.Printf("E! NewBotAPI failed: %v", err)
 		os.Exit(1)
