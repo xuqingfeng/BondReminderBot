@@ -11,6 +11,7 @@ services:
     image: xuqingfeng/brb:latest
     environment:
       - TGBOT_TOKEN=${TGBOT_TOKEN}
+      - TGBOT_SOCKS5=${TGBOT_SOCKS5}
       - REDIS_ADDR=redis:6379
       - REDIS_PASS=""
     ports:
