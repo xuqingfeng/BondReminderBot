@@ -2,7 +2,7 @@
 
 > 用于可转债 打新/上市 提醒
 
-https://t.me/BondReminderBot
+~~https://t.me/BondReminderBot~~ :warning: 不再维护，如果有需要请自行搭建 :warning:
 
 ### 用法
 
