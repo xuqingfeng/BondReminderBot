@@ -6,20 +6,14 @@ jobs:
   test:
     name: run test
     runs-on: ubuntu-latest
-    env:
-      GO_VERSION: 1.25.0
-      GO_OS: linux
-      GO_ARCH: amd64
     steps:
-      # install go manually to fix "go mod download" failure
-      - name: Install go
-        run: |
-          wget -q https://dl.google.com/go/go$GO_VERSION.$GO_OS-$GO_ARCH.tar.gz
-          sudo tar -C /usr/local -xzf go$GO_VERSION.$GO_OS-$GO_ARCH.tar.gz
-          export PATH=/usr/local/go/bin:$PATH
-          go version
+      - uses: actions/checkout@v5
 
-      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
 
       - name: Run test
         run: |
