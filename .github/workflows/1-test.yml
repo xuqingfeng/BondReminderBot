@@ -7,7 +7,7 @@ jobs:
     name: run test
     runs-on: ubuntu-latest
     env:
-      GO_VERSION: 1.21.3
+      GO_VERSION: 1.25.0
       GO_OS: linux
       GO_ARCH: amd64
     steps:
@@ -19,7 +19,7 @@ jobs:
           export PATH=/usr/local/go/bin:$PATH
           go version
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Run test
         run: |
